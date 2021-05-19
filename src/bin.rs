@@ -1,11 +1,8 @@
-mod qmath;
-mod pattern_along_path;
-mod glifwriter;
-
-use clap::{Arg, App};
-use pattern_along_path::*;
-use qmath::{Vector};
+use clap::{App, Arg};
 use std::fs;
+use MFEKStrokelib::glifwriter;
+use MFEKStrokelib::pattern_along_path::*;
+use MFEKStrokelib::qmath::{PointData, Vector};
 
 fn main() {
     let matches = App::new("QPaP")
@@ -75,14 +72,15 @@ fn main() {
     let pattern_string = matches.value_of("pattern").unwrap();
     let output_string = matches.value_of("output").unwrap();
 
-    let path: glifparser::Glif<Option<qmath::PointData>> = glifparser::read_ufo_glif(&fs::read_to_string(path_string)
-    .expect("Failed to read path file!"));
- 
-    let pattern: glifparser::Glif<Option<qmath::PointData>> = glifparser::read_ufo_glif(&fs::read_to_string(pattern_string)
-        .expect("Failed to read pattern file!"));
+    let path: glifparser::Glif<Option<PointData>> = glifparser::read_ufo_glif(
+        &fs::read_to_string(path_string).expect("Failed to read path file!"),
+    );
 
+    let pattern: glifparser::Glif<Option<PointData>> = glifparser::read_ufo_glif(
+        &fs::read_to_string(pattern_string).expect("Failed to read pattern file!"),
+    );
 
-    let mut settings = PatternSettings{
+    let mut settings = PatternSettings {
         copies: PatternCopies::Single,
         subdivide: PatternSubdivide::Off,
         is_vertical: false,
